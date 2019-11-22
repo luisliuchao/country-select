@@ -3,6 +3,18 @@
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
+var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
+
+function decodeCountry(json) {
+  return /* record */[
+          /* value */Json_decode.field("value", Json_decode.string, json),
+          /* label */Json_decode.field("label", Json_decode.string, json)
+        ];
+}
+
+function decodeCountries(param) {
+  return Json_decode.array(decodeCountry, param);
+}
 
 function CountrySelect(Props) {
   var match = React.useState((function () {
@@ -14,8 +26,9 @@ function CountrySelect(Props) {
           fetch("https://gist.githubusercontent.com/rusty-key/659db3f4566df459bd59c8a53dc9f71f/raw/4127f9550ef063121c564025f6d27dceeb279623/counties.json").then((function (response) {
                       return response.json();
                     })).then((function (jsonResponse) {
+                    var countries = Json_decode.array(decodeCountry, jsonResponse);
                     Curry._1(setState, (function (_previousState) {
-                            return /* LoadedCountries */[jsonResponse];
+                            return /* LoadedCountries */[countries];
                           }));
                     return Promise.resolve(/* () */0);
                   })).catch((function (_err) {
@@ -42,5 +55,7 @@ function CountrySelect(Props) {
 
 var make = CountrySelect;
 
+exports.decodeCountry = decodeCountry;
+exports.decodeCountries = decodeCountries;
 exports.make = make;
 /* react Not a pure module */

@@ -5,6 +5,14 @@ type country = {
 	label: string,
 };
 
+let decodeCountry = json => 
+	Json.Decode.{
+		value: json |> field("value", string),
+		label: json |> field("label", string)
+	};
+
+let decodeCountries = Json.Decode.array(decodeCountry)
+
 type state =
 | LoadingCountries
 | ErrorFetchingCountries
@@ -21,7 +29,9 @@ let make = () => {
   		fetch("https://gist.githubusercontent.com/rusty-key/659db3f4566df459bd59c8a53dc9f71f/raw/4127f9550ef063121c564025f6d27dceeb279623/counties.json")
 	  		|> then_(response => response##json())
 	  		|> then_(jsonResponse => {
-	  			setState(_previousState => LoadedCountries(jsonResponse));
+	  			let countries: array(country) = 
+	  				jsonResponse |> decodeCountries;
+	  			setState(_previousState => LoadedCountries(countries));
 	  			Js.Promise.resolve();
 	  		})
 	  		|> catch(_err => {
