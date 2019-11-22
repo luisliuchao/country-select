@@ -46,6 +46,11 @@ ReactDOMRe.render(
 );
 
 ReactDOMRe.render(
+  <CountrySelect />,
+  makeContainer("Country Select"),
+);
+
+ReactDOMRe.render(
   <ReasonUsingJSUsingReason />,
   makeContainer("Reason Using JS Using Reason"),
 );

@@ -2,6 +2,7 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
+var CountrySelect$ReasonReactExamples = require("./CountrySelect/CountrySelect.bs.js");
 var ExampleStyles$ReasonReactExamples = require("./ExampleStyles.bs.js");
 var BlinkingGreeting$ReasonReactExamples = require("./BlinkingGreeting/BlinkingGreeting.bs.js");
 var FetchedDogPictures$ReasonReactExamples = require("./FetchedDogPictures/FetchedDogPictures.bs.js");
@@ -35,6 +36,8 @@ ReactDom.render(React.createElement(BlinkingGreeting$ReasonReactExamples.make, {
 ReactDom.render(React.createElement(ReducerFromReactJSDocs$ReasonReactExamples.make, { }), makeContainer("Reducer From ReactJS Docs"));
 
 ReactDom.render(React.createElement(FetchedDogPictures$ReasonReactExamples.make, { }), makeContainer("Fetched Dog Pictures"));
+
+ReactDom.render(React.createElement(CountrySelect$ReasonReactExamples.make, { }), makeContainer("Country Select"));
 
 ReactDom.render(React.createElement(ReasonUsingJSUsingReason$ReasonReactExamples.make, { }), makeContainer("Reason Using JS Using Reason"));
 
