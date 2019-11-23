@@ -27,30 +27,11 @@ let makeContainer = text => {
   content;
 };
 
-// All 4 examples.
 ReactDOMRe.render(
-  <BlinkingGreeting>
-    {React.string("Hello!")}
-  </BlinkingGreeting>,
-  makeContainer("Blinking Greeting"),
-);
-
-ReactDOMRe.render(
-  <ReducerFromReactJSDocs />,
-  makeContainer("Reducer From ReactJS Docs"),
-);
-
-ReactDOMRe.render(
-  <FetchedDogPictures />,
-  makeContainer("Fetched Dog Pictures"),
-);
-
-ReactDOMRe.render(
-  <CountrySelect />,
+  <CountrySelect
+    className="custom-class"
+    country=Some("us")
+    onChange=(country => Js.log(country))
+  />,
   makeContainer("Country Select"),
-);
-
-ReactDOMRe.render(
-  <ReasonUsingJSUsingReason />,
-  makeContainer("Reason Using JS Using Reason"),
 );
