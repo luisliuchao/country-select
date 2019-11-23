@@ -1,5 +1,5 @@
 type state = {
-  value: string
+  value: string,
 };
 
 type action =
@@ -7,7 +7,7 @@ type action =
   | KeyDown(int);
 
 let initialState = { 
-  value: ""
+  value: "",
 };
 
 [@react.component]
