@@ -17,6 +17,7 @@ type action =
 
 let make = (
     ~items: array(item),
+    ~selectedItem: option(item),
     ~onSelect: item => unit=(_) => (),
   ) => {
 
@@ -50,9 +51,11 @@ let make = (
 
   let (state, dispatch) = React.useReducer(reducer, initialState);
 
+  let { inputValue, filteredItems, focusedItemIndex } = state;
+
   <div>
     <input
-      value=state.inputValue
+      value=inputValue
       onChange=(
         event => {
           let value: string = ReactEvent.Form.target(event)##value;
@@ -81,10 +84,10 @@ let make = (
     />
     <ul>
       {
-        state.filteredItems
+        filteredItems
         -> Belt.Array.mapWithIndex((i, item) => {
             let style={ReactDOMRe.Style.make(
-              ~backgroundColor= i === state.focusedItemIndex ? "red" : "blue",
+              ~backgroundColor= i == focusedItemIndex ? "red" : Some(filteredItems[i]) == selectedItem ? "blue" : "white",
               (),
             )};
             <li key={item.value} style=style>{ React.string(item.label) }</li>

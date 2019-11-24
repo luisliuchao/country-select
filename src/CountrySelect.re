@@ -36,7 +36,7 @@ let make = (
           let items: array(country) = jsonResponse |> Decode.countries;
           switch (country) {
           | Some(value) => 
-            let selectedItems = items -> Belt.Array.keep(item => item.value == value);
+            let selectedItems = items -> Belt.Array.keep(item => item.value == Js.String.toLowerCase(value));
             switch (Js.Array.length(selectedItems)) {
             | 0 => ()
             | _ => setState(state => { ...state, selectedCountry: Some(selectedItems[0])})
@@ -60,15 +60,17 @@ let make = (
     onChange(country.value);
   };
 
-  <div>
+  let { selectedCountry, countries } = state;
+
+  <div className>
     { 
-      switch (state.selectedCountry) {
+      switch (selectedCountry) {
       | Some(country) => React.string(country.label)
       | None => React.string("Nothing selected")
       }
     }
     {
-      switch (state.countries) {
+      switch (countries) {
        | ErrorFetchingCountries => 
           <div>{ React.string("An error occurred!") }</div>
        | LoadingCountries => 
@@ -76,6 +78,7 @@ let make = (
        | LoadedCountries(items) => 
           <SelectMenu 
             items=items 
+            selectedItem=selectedCountry
             onSelect=handleSelect
           />
        }

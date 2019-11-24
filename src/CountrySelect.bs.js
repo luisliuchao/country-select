@@ -8,7 +8,7 @@ var Decode$ReasonReactExamples = require("./Decode.bs.js");
 var SelectMenu$ReasonReactExamples = require("./SelectMenu.bs.js");
 
 function CountrySelect(Props) {
-  Props.className;
+  var className = Props.className;
   var country = Props.country;
   var match = Props.onChange;
   var onChange = match !== undefined ? match : (function (param) {
@@ -30,7 +30,7 @@ function CountrySelect(Props) {
                     if (country !== undefined) {
                       var value = country;
                       var selectedItems = Belt_Array.keep(items, (function (item) {
-                              return item[/* value */1] === value;
+                              return item[/* value */1] === value.toLowerCase();
                             }));
                       var match = selectedItems.length;
                       if (match !== 0) {
@@ -70,12 +70,15 @@ function CountrySelect(Props) {
           }));
     return Curry._1(onChange, country[/* value */1]);
   };
-  var match$2 = state[/* selectedCountry */1];
-  var match$3 = state[/* countries */0];
-  return React.createElement("div", undefined, match$2 !== undefined ? match$2[/* label */0] : "Nothing selected", typeof match$3 === "number" ? (
-                match$3 !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")
+  var selectedCountry = state[/* selectedCountry */1];
+  var countries = state[/* countries */0];
+  return React.createElement("div", {
+              className: className
+            }, selectedCountry !== undefined ? selectedCountry[/* label */0] : "Nothing selected", typeof countries === "number" ? (
+                countries !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")
               ) : React.createElement(SelectMenu$ReasonReactExamples.make, {
-                    items: match$3[0],
+                    items: countries[0],
+                    selectedItem: selectedCountry,
                     onSelect: handleSelect
                   }));
 }

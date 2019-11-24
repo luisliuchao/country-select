@@ -30,7 +30,7 @@ let makeContainer = text => {
 ReactDOMRe.render(
   <CountrySelect
     className="custom-class"
-    country=Some("us")
+    country=Some("ax")
     onChange=(country => Js.log(country))
   />,
   makeContainer("Country Select"),

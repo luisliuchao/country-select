@@ -3,11 +3,13 @@
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
+var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 
 function SelectMenu(Props) {
   var items = Props.items;
+  var selectedItem = Props.selectedItem;
   var match = Props.onSelect;
   var onSelect = match !== undefined ? match : (function (param) {
         return /* () */0;
@@ -71,8 +73,10 @@ function SelectMenu(Props) {
     }
   };
   var match$1 = React.useReducer(reducer, initialState);
-  var dispatch = match$1[1];
   var state = match$1[0];
+  var focusedItemIndex = state[/* focusedItemIndex */2];
+  var filteredItems = state[/* filteredItems */1];
+  var dispatch = match$1[1];
   return React.createElement("div", undefined, React.createElement("input", {
                   value: state[/* inputValue */0],
                   onKeyDown: (function ($$event) {
@@ -105,10 +109,17 @@ function SelectMenu(Props) {
                       Curry._1(dispatch, /* ChangeInputValue */Block.__(0, [value]));
                       return Curry._1(dispatch, /* FilterItems */Block.__(1, [value]));
                     })
-                }), React.createElement("ul", undefined, Belt_Array.mapWithIndex(state[/* filteredItems */1], (function (i, item) {
-                        var match = i === state[/* focusedItemIndex */2];
+                }), React.createElement("ul", undefined, Belt_Array.mapWithIndex(filteredItems, (function (i, item) {
+                        var match = i === focusedItemIndex;
+                        var tmp;
+                        if (match) {
+                          tmp = "red";
+                        } else {
+                          var match$1 = Caml_obj.caml_equal(Caml_array.caml_array_get(filteredItems, i), selectedItem);
+                          tmp = match$1 ? "blue" : "white";
+                        }
                         var style = {
-                          backgroundColor: match ? "red" : "blue"
+                          backgroundColor: tmp
                         };
                         return React.createElement("li", {
                                     key: item[/* value */1],
