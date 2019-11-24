@@ -1,15 +1,16 @@
 
 [@bs.val] external fetch: string => Js.Promise.t('a) = "fetch";
 
+type country = Model.item;
+
 type countries = 
 | LoadingCountries
 | ErrorFetchingCountries
-| LoadedCountries(Model.items);
+| LoadedCountries(array(country));
 
 type state = {
-  inputValue: string,
   countries: countries,
-  allCountries: Model.items,
+  selectedCountry: option(country),
 };
 
 [@react.component]
@@ -18,17 +19,9 @@ let make = (
     ~country: option(string),
     ~onChange: string => unit=(_) => ()
   ) => {
-
-  let inputValue: string = 
-    switch (country) {
-     | Some(value) => value
-     | None => ""
-     };
-
   let initialState = {
-    inputValue,
     countries: LoadingCountries,
-    allCountries: [||],
+    selectedCountry: None,
   };
 
   let (state, setState) = React.useState(() => initialState);
@@ -39,8 +32,8 @@ let make = (
       fetch("https://gist.githubusercontent.com/rusty-key/659db3f4566df459bd59c8a53dc9f71f/raw/4127f9550ef063121c564025f6d27dceeb279623/counties.json")
         |> then_(response => response##json())
         |> then_(jsonResponse => {
-          let data: Model.items = jsonResponse |> Decode.countries;
-          setState(state => { ...state, countries: LoadedCountries(data), allCountries: data });
+          let items: array(country) = jsonResponse |> Decode.countries;
+          setState(state => { ...state, countries: LoadedCountries(items)  });
           Js.Promise.resolve();
         })
         |> catch(_err => {
@@ -52,24 +45,17 @@ let make = (
     None;
   });
 
-  let handleValueChange: string => unit = value => {
-    switch (state.countries) {
-     | LoadedCountries(_) => 
-        let filteredItems: Model.items = 
-          state.allCountries -> Belt.Array.keep(item => {
-            value == "" || Js.String.includes(value, Js.String.toLowerCase(item.label))
-          });
-        setState(state => { ...state, countries: LoadedCountries(filteredItems) })
-     | _ => ()
-     };
-    setState(state => { ...state, inputValue: value });
+  let handleSelect: country => unit = item => {
+    setState(state => { ...state, selectedCountry: Some(item) })
   };
 
   <div>
-    <SelectInput 
-      value=state.inputValue
-      onChange=handleValueChange
-    />
+    { 
+      switch (state.selectedCountry) {
+      | Some(country) => React.string(country.label)
+      | None => React.string("Nothing selected")
+      }
+    }
     {
       switch (state.countries) {
        | ErrorFetchingCountries => 
