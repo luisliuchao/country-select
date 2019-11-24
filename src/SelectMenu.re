@@ -66,7 +66,7 @@ let make = (
           dispatch(FilterItems(value));
         }
       )
-      onKeyDown={
+      onKeyDown=(
         event => {
           let key: int = ReactEvent.Keyboard.which(event);
           let preventDefault = ReactEvent.Keyboard.preventDefault;
@@ -84,13 +84,13 @@ let make = (
           | _ => ()
           }
         }
-      }
+      )
     />
     <ul 
       className=Styles.list
-      onClick={
+      onClick=(
         event => {
-          let label: string  = ReactEvent.Mouse.target(event)##innerText;
+          let label: string = ReactEvent.Mouse.target(event)##innerText;
           let items = filteredItems -> Belt.Array.keep(item => {
             item.label == label
           });
@@ -100,14 +100,14 @@ let make = (
             dispatch(SelectItem(items[0]));
           }
         }
-      }
+      )
     >
       {
         filteredItems
         -> Belt.Array.mapWithIndex((i, item) => {
             let focus: bool = i == focusedItemIndex;
             let active: bool = Some(filteredItems[i]) == selectedItem;
-            <li key={item.value} className=Styles.listItem(focus, active)>
+            <li key={item.value} className=Styles.listItem(~focus=focus, ~active=active)>
               { React.string(item.label) }
             </li>
           })

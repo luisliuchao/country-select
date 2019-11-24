@@ -18,14 +18,8 @@ var container = Css.style(/* :: */[
         /* :: */[
           Css.boxShadow(Css.Shadow.box(Css.px(3), Css.px(3), Css.px(10), undefined, undefined, borderColor)),
           /* :: */[
-            Css.maxHeight(Css.px(200)),
-            /* :: */[
-              Css.overflowY(Css.auto),
-              /* :: */[
-                Css.border(Css.px(1), Css.solid, borderColor),
-                /* [] */0
-              ]
-            ]
+            Css.border(Css.px(1), Css.solid, borderColor),
+            /* [] */0
           ]
         ]
       ]
@@ -60,7 +54,13 @@ var list = Css.style(/* :: */[
         Css.margin(Css.px(0)),
         /* :: */[
           Css.listStyleType(Css.none),
-          /* [] */0
+          /* :: */[
+            Css.maxHeight(Css.px(200)),
+            /* :: */[
+              Css.overflowY(Css.auto),
+              /* [] */0
+            ]
+          ]
         ]
       ]
     ]);

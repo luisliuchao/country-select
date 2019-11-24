@@ -18,7 +18,8 @@ function CountrySelect(Props) {
   var match$1 = React.useState((function () {
           return /* record */[
                   /* countries : LoadingCountries */0,
-                  /* selectedCountry */undefined
+                  /* selectedCountry */undefined,
+                  /* isMenuOpen */false
                 ];
         }));
   var setState = match$1[1];
@@ -38,7 +39,8 @@ function CountrySelect(Props) {
                         Curry._1(setState, (function (state) {
                                 return /* record */[
                                         /* countries */state[/* countries */0],
-                                        /* selectedCountry */Caml_array.caml_array_get(selectedItems, 0)
+                                        /* selectedCountry */Caml_array.caml_array_get(selectedItems, 0),
+                                        /* isMenuOpen */state[/* isMenuOpen */2]
                                       ];
                               }));
                       }
@@ -47,7 +49,8 @@ function CountrySelect(Props) {
                     Curry._1(setState, (function (state) {
                             return /* record */[
                                     /* countries : LoadedCountries */[items],
-                                    /* selectedCountry */state[/* selectedCountry */1]
+                                    /* selectedCountry */state[/* selectedCountry */1],
+                                    /* isMenuOpen */state[/* isMenuOpen */2]
                                   ];
                           }));
                     return Promise.resolve(/* () */0);
@@ -55,7 +58,8 @@ function CountrySelect(Props) {
                   Curry._1(setState, (function (state) {
                           return /* record */[
                                   /* countries : ErrorFetchingCountries */1,
-                                  /* selectedCountry */state[/* selectedCountry */1]
+                                  /* selectedCountry */state[/* selectedCountry */1],
+                                  /* isMenuOpen */state[/* isMenuOpen */2]
                                 ];
                         }));
                   return Promise.resolve(/* () */0);
@@ -66,7 +70,8 @@ function CountrySelect(Props) {
     Curry._1(setState, (function (state) {
             return /* record */[
                     /* countries */state[/* countries */0],
-                    /* selectedCountry */country
+                    /* selectedCountry */country,
+                    /* isMenuOpen */false
                   ];
           }));
     return Curry._1(onChange, country[/* value */1]);
@@ -74,18 +79,53 @@ function CountrySelect(Props) {
   var selectedCountry = state[/* selectedCountry */1];
   var countries = state[/* countries */0];
   return React.createElement("div", {
-              className: className
+              className: className,
+              onKeyDown: (function ($$event) {
+                  var key = $$event.which;
+                  if (key !== 13) {
+                    if (key !== 27) {
+                      return /* () */0;
+                    } else {
+                      return Curry._1(setState, (function (state) {
+                                    return /* record */[
+                                            /* countries */state[/* countries */0],
+                                            /* selectedCountry */state[/* selectedCountry */1],
+                                            /* isMenuOpen */false
+                                          ];
+                                  }));
+                    }
+                  } else {
+                    return Curry._1(setState, (function (state) {
+                                  return /* record */[
+                                          /* countries */state[/* countries */0],
+                                          /* selectedCountry */state[/* selectedCountry */1],
+                                          /* isMenuOpen */true
+                                        ];
+                                }));
+                  }
+                })
             }, React.createElement("input", {
                   className: CountrySelectStyles$ReasonReactExamples.inputContainer,
                   readOnly: true,
-                  value: selectedCountry !== undefined ? selectedCountry[/* label */0] : ""
-                }), typeof countries === "number" ? (
-                countries !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")
-              ) : React.createElement(SelectMenu$ReasonReactExamples.make, {
-                    items: countries[0],
-                    selectedItem: selectedCountry,
-                    onSelect: handleSelect
-                  }));
+                  value: selectedCountry !== undefined ? selectedCountry[/* label */0] : "",
+                  onClick: (function (param) {
+                      return Curry._1(setState, (function (state) {
+                                    return /* record */[
+                                            /* countries */state[/* countries */0],
+                                            /* selectedCountry */state[/* selectedCountry */1],
+                                            /* isMenuOpen */true
+                                          ];
+                                  }));
+                    })
+                }), state[/* isMenuOpen */2] ? (
+                typeof countries === "number" ? (
+                    countries !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")
+                  ) : React.createElement(SelectMenu$ReasonReactExamples.make, {
+                        items: countries[0],
+                        selectedItem: selectedCountry,
+                        onSelect: handleSelect
+                      })
+              ) : React.createElement("div", undefined));
 }
 
 var Styles = 0;

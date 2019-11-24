@@ -10,8 +10,6 @@ let container = style([
   fontSize(font),
   width(px(250)),
   boxShadow(Shadow.box(~x=px(3), ~y=px(3), ~blur=px(10), borderColor)),
-  maxHeight(px(200)),
-  overflowY(auto),
   border(px(1), solid, borderColor),
 ]);
 
@@ -28,7 +26,9 @@ let input = style([
 let list = style([
   padding(px(0)),
   margin(px(0)),
-  listStyleType(none)
+  listStyleType(none),
+  maxHeight(px(200)),
+  overflowY(auto),
 ]);
 
 let listItem = (~focus: bool, ~active: bool) =>  

@@ -11,6 +11,7 @@ type countries =
 type state = {
   countries: countries,
   selectedCountry: option(country),
+  isMenuOpen: bool,
 };
 
 module Styles = CountrySelectStyles;
@@ -25,6 +26,7 @@ let make = (
   let initialState = {
     countries: LoadingCountries,
     selectedCountry: None,
+    isMenuOpen: false,
   };
 
   let (state, setState) = React.useState(() => initialState);
@@ -58,13 +60,25 @@ let make = (
   });
 
   let handleSelect: country => unit = country => {
-    setState(state => { ...state, selectedCountry: Some(country) });
+    setState(state => { ...state, selectedCountry: Some(country), isMenuOpen: false });
     onChange(country.value);
   };
 
-  let { selectedCountry, countries } = state;
+  let { selectedCountry, countries, isMenuOpen } = state;
 
-  <div className>
+  <div 
+    className
+    onKeyDown=(
+      event => {
+        let key: int = ReactEvent.Keyboard.which(event);
+        switch (key) {
+        | 27 => setState(state => { ...state, isMenuOpen: false })
+        | 13 => setState(state => { ...state, isMenuOpen: true })
+        | _ => ()
+        }
+      }
+    )
+  >
     <input
       readOnly=true
       className=Styles.inputContainer
@@ -74,21 +88,25 @@ let make = (
         | None => ""
         }
       }
+      onClick=(_ => setState(state => { ...state, isMenuOpen: true }))
     />
-
     {
-      switch (countries) {
-       | ErrorFetchingCountries => 
-          <div>{ React.string("An error occurred!") }</div>
-       | LoadingCountries => 
-          <div>{ React.string("Loading...") }</div>
-       | LoadedCountries(items) => 
-          <SelectMenu 
-            items=items 
-            selectedItem=selectedCountry
-            onSelect=handleSelect
-          />
-       }
+      switch (isMenuOpen) {
+      | false => <div></div>
+      | true => 
+         switch (countries) {
+         | ErrorFetchingCountries => 
+            <div>{ React.string("An error occurred!") }</div>
+         | LoadingCountries => 
+            <div>{ React.string("Loading...") }</div>
+         | LoadedCountries(items) => 
+            <SelectMenu 
+              items=items 
+              selectedItem=selectedCountry
+              onSelect=handleSelect
+            />
+         }
+      }
     } 
   </div>
 };
