@@ -11,7 +11,7 @@ type action =
 | FilterItems(string)
 | FocusNextItem
 | FocusPrevItem
-| SelectItem;
+| SelectItem(item);
 
 
 module Styles = SelectMenuStyles;
@@ -43,9 +43,8 @@ let make = (
       { ...state, focusedItemIndex: focusedItemIndex + 1 }
     | FocusPrevItem when focusedItemIndex > 0 =>
       { ...state, focusedItemIndex: focusedItemIndex - 1 }
-    | SelectItem =>
-      let focusedItem = filteredItems[focusedItemIndex];
-      onSelect(focusedItem);
+    | SelectItem(item) =>
+      onSelect(item);
       state;
     | _ => state
     };
@@ -80,13 +79,29 @@ let make = (
             dispatch(FocusPrevItem)
           | 13 =>
             preventDefault(event)
-            dispatch(SelectItem)
+            let item: item = filteredItems[focusedItemIndex]
+            dispatch(SelectItem(item))
           | _ => ()
           }
         }
       }
     />
-    <ul className=Styles.list>
+    <ul 
+      className=Styles.list
+      onClick={
+        event => {
+          let label: string  = ReactEvent.Mouse.target(event)##innerText;
+          let items = filteredItems -> Belt.Array.keep(item => {
+            item.label == label
+          });
+          switch (Js.Array.length(items)) {
+          | 0 => ()
+          | _ => 
+            dispatch(SelectItem(items[0]));
+          }
+        }
+      }
+    >
       {
         filteredItems
         -> Belt.Array.mapWithIndex((i, item) => {

@@ -77,6 +77,7 @@ function CountrySelect(Props) {
               className: className
             }, React.createElement("input", {
                   className: CountrySelectStyles$ReasonReactExamples.inputContainer,
+                  readOnly: true,
                   value: selectedCountry !== undefined ? selectedCountry[/* label */0] : ""
                 }), typeof countries === "number" ? (
                 countries !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")

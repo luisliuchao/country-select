@@ -66,6 +66,7 @@ let make = (
 
   <div className>
     <input
+      readOnly=true
       className=Styles.inputContainer
       value= { 
         switch (selectedCountry) {

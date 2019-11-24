@@ -22,55 +22,53 @@ function SelectMenu(Props) {
   ];
   var reducer = function (state, action) {
     var focusedItemIndex = state[/* focusedItemIndex */2];
-    var filteredItems = state[/* filteredItems */1];
     if (typeof action === "number") {
-      switch (action) {
-        case /* FocusNextItem */0 :
-            if (focusedItemIndex < (filteredItems.length - 1 | 0)) {
-              return /* record */[
-                      /* inputValue */state[/* inputValue */0],
-                      /* filteredItems */state[/* filteredItems */1],
-                      /* focusedItemIndex */focusedItemIndex + 1 | 0
-                    ];
-            } else {
-              return state;
-            }
-        case /* FocusPrevItem */1 :
-            if (focusedItemIndex > 0) {
-              return /* record */[
-                      /* inputValue */state[/* inputValue */0],
-                      /* filteredItems */state[/* filteredItems */1],
-                      /* focusedItemIndex */focusedItemIndex - 1 | 0
-                    ];
-            } else {
-              return state;
-            }
+      if (action === /* FocusNextItem */0) {
+        if (focusedItemIndex < (state[/* filteredItems */1].length - 1 | 0)) {
+          return /* record */[
+                  /* inputValue */state[/* inputValue */0],
+                  /* filteredItems */state[/* filteredItems */1],
+                  /* focusedItemIndex */focusedItemIndex + 1 | 0
+                ];
+        } else {
+          return state;
+        }
+      } else if (focusedItemIndex > 0) {
+        return /* record */[
+                /* inputValue */state[/* inputValue */0],
+                /* filteredItems */state[/* filteredItems */1],
+                /* focusedItemIndex */focusedItemIndex - 1 | 0
+              ];
+      } else {
+        return state;
+      }
+    } else {
+      switch (action.tag | 0) {
+        case /* ChangeInputValue */0 :
+            return /* record */[
+                    /* inputValue */action[0],
+                    /* filteredItems */state[/* filteredItems */1],
+                    /* focusedItemIndex */state[/* focusedItemIndex */2]
+                  ];
+        case /* FilterItems */1 :
+            var inputValue = action[0];
+            var filteredItems = Belt_Array.keep(items, (function (item) {
+                    if (inputValue === "") {
+                      return true;
+                    } else {
+                      return item[/* label */0].toLowerCase().includes(inputValue.toLowerCase());
+                    }
+                  }));
+            return /* record */[
+                    /* inputValue */state[/* inputValue */0],
+                    /* filteredItems */filteredItems,
+                    /* focusedItemIndex */0
+                  ];
         case /* SelectItem */2 :
-            var focusedItem = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
-            Curry._1(onSelect, focusedItem);
+            Curry._1(onSelect, action[0]);
             return state;
         
       }
-    } else if (action.tag) {
-      var inputValue = action[0];
-      var filteredItems$1 = Belt_Array.keep(items, (function (item) {
-              if (inputValue === "") {
-                return true;
-              } else {
-                return item[/* label */0].toLowerCase().includes(inputValue.toLowerCase());
-              }
-            }));
-      return /* record */[
-              /* inputValue */state[/* inputValue */0],
-              /* filteredItems */filteredItems$1,
-              /* focusedItemIndex */0
-            ];
-    } else {
-      return /* record */[
-              /* inputValue */action[0],
-              /* filteredItems */state[/* filteredItems */1],
-              /* focusedItemIndex */state[/* focusedItemIndex */2]
-            ];
     }
   };
   var match$1 = React.useReducer(reducer, initialState);
@@ -106,7 +104,8 @@ function SelectMenu(Props) {
                         return /* () */0;
                       } else {
                         $$event.preventDefault();
-                        return Curry._1(dispatch, /* SelectItem */2);
+                        var item = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
+                        return Curry._1(dispatch, /* SelectItem */Block.__(2, [item]));
                       }
                     }),
                   onChange: (function ($$event) {
@@ -115,7 +114,19 @@ function SelectMenu(Props) {
                       return Curry._1(dispatch, /* FilterItems */Block.__(1, [value]));
                     })
                 }), React.createElement("ul", {
-                  className: SelectMenuStyles$ReasonReactExamples.list
+                  className: SelectMenuStyles$ReasonReactExamples.list,
+                  onClick: (function ($$event) {
+                      var label = $$event.target.innerText;
+                      var items = Belt_Array.keep(filteredItems, (function (item) {
+                              return item[/* label */0] === label;
+                            }));
+                      var match = items.length;
+                      if (match !== 0) {
+                        return Curry._1(dispatch, /* SelectItem */Block.__(2, [Caml_array.caml_array_get(items, 0)]));
+                      } else {
+                        return /* () */0;
+                      }
+                    })
                 }, Belt_Array.mapWithIndex(filteredItems, (function (i, item) {
                         var focus = i === focusedItemIndex;
                         var active = Caml_obj.caml_equal(Caml_array.caml_array_get(filteredItems, i), selectedItem);
