@@ -4,10 +4,14 @@ var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
+var Caml_array = require("bs-platform/lib/js/caml_array.js");
 
 function SelectMenu(Props) {
   var items = Props.items;
-  Props.onSelect;
+  var match = Props.onSelect;
+  var onSelect = match !== undefined ? match : (function (param) {
+        return /* () */0;
+      });
   var initialState = /* record */[
     /* inputValue */"",
     /* filteredItems */items,
@@ -15,29 +19,38 @@ function SelectMenu(Props) {
   ];
   var reducer = function (state, action) {
     var focusedItemIndex = state[/* focusedItemIndex */2];
+    var filteredItems = state[/* filteredItems */1];
     if (typeof action === "number") {
-      if (action === /* FocusNextItem */0) {
-        if (focusedItemIndex < (state[/* filteredItems */1].length - 1 | 0)) {
-          return /* record */[
-                  /* inputValue */state[/* inputValue */0],
-                  /* filteredItems */state[/* filteredItems */1],
-                  /* focusedItemIndex */focusedItemIndex + 1 | 0
-                ];
-        } else {
-          return state;
-        }
-      } else if (focusedItemIndex > 0) {
-        return /* record */[
-                /* inputValue */state[/* inputValue */0],
-                /* filteredItems */state[/* filteredItems */1],
-                /* focusedItemIndex */focusedItemIndex - 1 | 0
-              ];
-      } else {
-        return state;
+      switch (action) {
+        case /* FocusNextItem */0 :
+            if (focusedItemIndex < (filteredItems.length - 1 | 0)) {
+              return /* record */[
+                      /* inputValue */state[/* inputValue */0],
+                      /* filteredItems */state[/* filteredItems */1],
+                      /* focusedItemIndex */focusedItemIndex + 1 | 0
+                    ];
+            } else {
+              return state;
+            }
+        case /* FocusPrevItem */1 :
+            if (focusedItemIndex > 0) {
+              return /* record */[
+                      /* inputValue */state[/* inputValue */0],
+                      /* filteredItems */state[/* filteredItems */1],
+                      /* focusedItemIndex */focusedItemIndex - 1 | 0
+                    ];
+            } else {
+              return state;
+            }
+        case /* SelectItem */2 :
+            var focusedItem = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
+            Curry._1(onSelect, focusedItem);
+            return state;
+        
       }
     } else if (action.tag) {
       var inputValue = action[0];
-      var filteredItems = Belt_Array.keep(items, (function (item) {
+      var filteredItems$1 = Belt_Array.keep(items, (function (item) {
               if (inputValue === "") {
                 return true;
               } else {
@@ -46,7 +59,7 @@ function SelectMenu(Props) {
             }));
       return /* record */[
               /* inputValue */state[/* inputValue */0],
-              /* filteredItems */filteredItems,
+              /* filteredItems */filteredItems$1,
               /* focusedItemIndex */0
             ];
     } else {
@@ -57,24 +70,34 @@ function SelectMenu(Props) {
             ];
     }
   };
-  var match = React.useReducer(reducer, initialState);
-  var dispatch = match[1];
-  var state = match[0];
+  var match$1 = React.useReducer(reducer, initialState);
+  var dispatch = match$1[1];
+  var state = match$1[0];
   return React.createElement("div", undefined, React.createElement("input", {
                   value: state[/* inputValue */0],
                   onKeyDown: (function ($$event) {
                       var key = $$event.which;
-                      switch (key) {
-                        case 38 :
-                            $$event.preventDefault();
-                            return Curry._1(dispatch, /* FocusPrevItem */1);
-                        case 39 :
-                            return /* () */0;
-                        case 40 :
-                            $$event.preventDefault();
-                            return Curry._1(dispatch, /* FocusNextItem */0);
-                        default:
+                      if (key >= 38) {
+                        if (key >= 41) {
                           return /* () */0;
+                        } else {
+                          switch (key - 38 | 0) {
+                            case 0 :
+                                $$event.preventDefault();
+                                return Curry._1(dispatch, /* FocusPrevItem */1);
+                            case 1 :
+                                return /* () */0;
+                            case 2 :
+                                $$event.preventDefault();
+                                return Curry._1(dispatch, /* FocusNextItem */0);
+                            
+                          }
+                        }
+                      } else if (key !== 13) {
+                        return /* () */0;
+                      } else {
+                        $$event.preventDefault();
+                        return Curry._1(dispatch, /* SelectItem */2);
                       }
                     }),
                   onChange: (function ($$event) {

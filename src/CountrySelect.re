@@ -45,8 +45,9 @@ let make = (
     None;
   });
 
-  let handleSelect: country => unit = item => {
-    setState(state => { ...state, selectedCountry: Some(item) })
+  let handleSelect: country => unit = country => {
+    setState(state => { ...state, selectedCountry: Some(country) })
+    onChange(country.value);
   };
 
   <div>
@@ -62,7 +63,11 @@ let make = (
           <div>{ React.string("An error occurred!") }</div>
        | LoadingCountries => 
           <div>{ React.string("Loading...") }</div>
-       | LoadedCountries(items) => <SelectMenu items=items />
+       | LoadedCountries(items) => 
+          <SelectMenu 
+            items=items 
+            onSelect=handleSelect
+          />
        }
     } 
   </div>

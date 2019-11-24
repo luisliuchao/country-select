@@ -10,7 +10,8 @@ type action =
 | ChangeInputValue(string)
 | FilterItems(string)
 | FocusNextItem
-| FocusPrevItem;
+| FocusPrevItem
+| SelectItem;
 
 [@react.component]
 
@@ -39,6 +40,10 @@ let make = (
       { ...state, focusedItemIndex: focusedItemIndex + 1 }
     | FocusPrevItem when focusedItemIndex > 0 =>
       { ...state, focusedItemIndex: focusedItemIndex - 1 }
+    | SelectItem =>
+      let focusedItem = filteredItems[focusedItemIndex];
+      onSelect(focusedItem);
+      state;
     | _ => state
     };
   }
@@ -58,13 +63,17 @@ let make = (
       onKeyDown={
         event => {
           let key: int = ReactEvent.Keyboard.which(event);
+          let preventDefault = ReactEvent.Keyboard.preventDefault;
           switch (key) {
           | 40 => 
-            ReactEvent.Keyboard.preventDefault(event)
+            preventDefault(event)
             dispatch(FocusNextItem)
           | 38 => 
-            ReactEvent.Keyboard.preventDefault(event)
+            preventDefault(event)
             dispatch(FocusPrevItem)
+          | 13 =>
+            preventDefault(event)
+            dispatch(SelectItem)
           | _ => ()
           }
         }
