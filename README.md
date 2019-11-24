@@ -1,18 +1,17 @@
-# Run
+## Run
 ```
   npm install 
   npm run start
-
 ```
 
-# Keyboards
-`Enter`: open the dropdown
-`arrow down`: focus down country
-`arrow up`: focus previous country
-`Enter`: select country
-`esc`: close the dropdown
+## Keyboards
+1. `enter`: open the dropdown
+2. `arrow down`: focus next country
+3. `arrow up`: focus previous country
+4. `enter`: select country
+5. `esc`: close the dropdown
 
 
-# To Do
+## To Do
 1. include flag-icon-css
 2. include react-virtualized
