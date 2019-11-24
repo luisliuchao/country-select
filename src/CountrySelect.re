@@ -59,8 +59,17 @@ let make = (
     None;
   });
 
+  let resetFocus: unit => unit = () => {
+    let inputEle = Utils.getElementById("CountrySelect-input");
+    switch (inputEle) {
+    | None => ()
+    | Some(ele) => Webapi.Dom.HtmlElement.focus(ele)
+    }
+  };
+
   let handleSelect: country => unit = country => {
     setState(state => { ...state, selectedCountry: Some(country), isMenuOpen: false });
+    resetFocus()
     onChange(country.value);
   };
 
@@ -72,7 +81,9 @@ let make = (
       event => {
         let key: int = ReactEvent.Keyboard.which(event);
         switch (key) {
-        | 27 => setState(state => { ...state, isMenuOpen: false })
+        | 27 => 
+          setState(state => { ...state, isMenuOpen: false })
+          resetFocus()
         | 13 => setState(state => { ...state, isMenuOpen: true })
         | _ => ()
         }

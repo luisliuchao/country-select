@@ -159,6 +159,7 @@ let make = (
               id={"CountrySelect-list-item-" ++ string_of_int(i)}
               key={item.value} 
               className=Styles.listItem(~focus=focus, ~active=active)
+              onMouseEnter=(_ => dispatch(FocusItem(i)))
             >
               { React.string(item.label) }
             </li>

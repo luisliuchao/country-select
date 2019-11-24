@@ -4,6 +4,8 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
+var Caml_option = require("bs-platform/lib/js/caml_option.js");
+var Utils$ReasonReactExamples = require("./Utils.bs.js");
 var Decode$ReasonReactExamples = require("./Decode.bs.js");
 var SelectMenu$ReasonReactExamples = require("./SelectMenu.bs.js");
 var CountrySelectStyles$ReasonReactExamples = require("./CountrySelectStyles.bs.js");
@@ -66,6 +68,15 @@ function CountrySelect(Props) {
                 }));
           return ;
         }), ([]));
+  var resetFocus = function (param) {
+    var inputEle = Utils$ReasonReactExamples.getElementById("CountrySelect-input");
+    if (inputEle !== undefined) {
+      Caml_option.valFromOption(inputEle).focus();
+      return /* () */0;
+    } else {
+      return /* () */0;
+    }
+  };
   var handleSelect = function (country) {
     Curry._1(setState, (function (state) {
             return /* record */[
@@ -74,6 +85,7 @@ function CountrySelect(Props) {
                     /* isMenuOpen */false
                   ];
           }));
+    resetFocus(/* () */0);
     return Curry._1(onChange, country[/* value */1]);
   };
   var selectedCountry = state[/* selectedCountry */1];
@@ -86,13 +98,14 @@ function CountrySelect(Props) {
                     if (key !== 27) {
                       return /* () */0;
                     } else {
-                      return Curry._1(setState, (function (state) {
-                                    return /* record */[
-                                            /* countries */state[/* countries */0],
-                                            /* selectedCountry */state[/* selectedCountry */1],
-                                            /* isMenuOpen */false
-                                          ];
-                                  }));
+                      Curry._1(setState, (function (state) {
+                              return /* record */[
+                                      /* countries */state[/* countries */0],
+                                      /* selectedCountry */state[/* selectedCountry */1],
+                                      /* isMenuOpen */false
+                                    ];
+                            }));
+                      return resetFocus(/* () */0);
                     }
                   } else {
                     return Curry._1(setState, (function (state) {

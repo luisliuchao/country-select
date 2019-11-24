@@ -185,7 +185,10 @@ function SelectMenu(Props) {
                         return React.createElement("li", {
                                     key: item[/* value */1],
                                     className: SelectMenuStyles$ReasonReactExamples.listItem(focus, active),
-                                    id: "CountrySelect-list-item-" + String(i)
+                                    id: "CountrySelect-list-item-" + String(i),
+                                    onMouseEnter: (function (param) {
+                                        return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
+                                      })
                                   }, item[/* label */0]);
                       }))));
 }
