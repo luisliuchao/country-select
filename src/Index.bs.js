@@ -2,14 +2,14 @@
 
 var React = require("react");
 var ReactDom = require("react-dom");
+var IndexStyles$ReasonReactExamples = require("./IndexStyles.bs.js");
 var CountrySelect$ReasonReactExamples = require("./CountrySelect.bs.js");
-var ExampleStyles$ReasonReactExamples = require("./ExampleStyles.bs.js");
 
 var style = document.createElement("style");
 
 document.head.appendChild(style);
 
-style.innerHTML = ExampleStyles$ReasonReactExamples.style;
+style.innerHTML = IndexStyles$ReasonReactExamples.style;
 
 function makeContainer(text) {
   var container = document.createElement("div");
