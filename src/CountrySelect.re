@@ -13,6 +13,8 @@ type state = {
   selectedCountry: option(country),
 };
 
+module Styles = CountrySelectStyles;
+
 [@react.component]
 let make = (
     ~className: string=?,
@@ -63,14 +65,16 @@ let make = (
   let { selectedCountry, countries } = state;
 
   <div className>
-    <div className=Styles.container>
-      { 
+    <input
+      className=Styles.inputContainer
+      value= { 
         switch (selectedCountry) {
-        | Some(country) => React.string(country.label)
-        | None => React.string("Nothing selected")
+        | Some(country) => country.label
+        | None => ""
         }
       }
-    </div>
+    />
+
     {
       switch (countries) {
        | ErrorFetchingCountries => 

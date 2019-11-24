@@ -2,9 +2,15 @@
 
 var Css = require("bs-css/src/Css.js");
 
-var container = Css.style(/* :: */[
-      Css.backgroundColor(Css.red),
-      /* [] */0
+var inputContainer = Css.style(/* :: */[
+      Css.fontSize(Css.px(15)),
+      /* :: */[
+        Css.padding(Css.px(5)),
+        /* :: */[
+          Css.width(Css.px(150)),
+          /* [] */0
+        ]
+      ]
     ]);
 
 var card = Css.style(/* :: */[
@@ -48,8 +54,8 @@ function actionButton(disabled) {
             ]);
 }
 
-exports.container = container;
+exports.inputContainer = inputContainer;
 exports.card = card;
 exports.title = title;
 exports.actionButton = actionButton;
-/* container Not a pure module */
+/* inputContainer Not a pure module */

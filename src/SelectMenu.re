@@ -13,8 +13,10 @@ type action =
 | FocusPrevItem
 | SelectItem;
 
-[@react.component]
 
+module Styles = SelectMenuStyles;
+
+[@react.component]
 let make = (
     ~items: array(item),
     ~selectedItem: option(item),
@@ -34,7 +36,7 @@ let make = (
     | FilterItems(inputValue) => 
       let filteredItems: array(item) = 
         items -> Belt.Array.keep(item => {
-          inputValue == "" || Js.String.includes(inputValue, Js.String.toLowerCase(item.label))
+          inputValue == "" || Js.String.includes(Js.String.toLowerCase(inputValue), Js.String.toLowerCase(item.label))
         });
       { ...state, filteredItems, focusedItemIndex: 0 }
     | FocusNextItem when focusedItemIndex < Js.Array.length(filteredItems) - 1 =>
@@ -53,9 +55,11 @@ let make = (
 
   let { inputValue, filteredItems, focusedItemIndex } = state;
 
-  <div>
+  <div className=Styles.container>
     <input
+      placeholder="Search"
       value=inputValue
+      className=Styles.input
       onChange=(
         event => {
           let value: string = ReactEvent.Form.target(event)##value;
@@ -82,15 +86,15 @@ let make = (
         }
       }
     />
-    <ul>
+    <ul className=Styles.list>
       {
         filteredItems
         -> Belt.Array.mapWithIndex((i, item) => {
-            let style={ReactDOMRe.Style.make(
-              ~backgroundColor= i == focusedItemIndex ? "red" : Some(filteredItems[i]) == selectedItem ? "blue" : "white",
-              (),
-            )};
-            <li key={item.value} style>{ React.string(item.label) }</li>
+            let focus: bool = i == focusedItemIndex;
+            let active: bool = Some(filteredItems[i]) == selectedItem;
+            <li key={item.value} className=Styles.listItem(focus, active)>
+              { React.string(item.label) }
+            </li>
           })
         -> React.array
       }
