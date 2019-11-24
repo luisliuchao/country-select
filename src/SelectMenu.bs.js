@@ -64,7 +64,13 @@ function SelectMenu(Props) {
                     /* filteredItems */filteredItems,
                     /* focusedItemIndex */0
                   ];
-        case /* SelectItem */2 :
+        case /* FocusItem */2 :
+            return /* record */[
+                    /* inputValue */state[/* inputValue */0],
+                    /* filteredItems */state[/* filteredItems */1],
+                    /* focusedItemIndex */action[0]
+                  ];
+        case /* SelectItem */3 :
             Curry._1(onSelect, action[0]);
             return state;
         
@@ -105,7 +111,7 @@ function SelectMenu(Props) {
                       } else {
                         $$event.preventDefault();
                         var item = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
-                        return Curry._1(dispatch, /* SelectItem */Block.__(2, [item]));
+                        return Curry._1(dispatch, /* SelectItem */Block.__(3, [item]));
                       }
                     }),
                   onChange: (function ($$event) {
@@ -122,7 +128,7 @@ function SelectMenu(Props) {
                             }));
                       var match = items.length;
                       if (match !== 0) {
-                        return Curry._1(dispatch, /* SelectItem */Block.__(2, [Caml_array.caml_array_get(items, 0)]));
+                        return Curry._1(dispatch, /* SelectItem */Block.__(3, [Caml_array.caml_array_get(items, 0)]));
                       } else {
                         return /* () */0;
                       }
@@ -132,7 +138,10 @@ function SelectMenu(Props) {
                         var active = Caml_obj.caml_equal(Caml_array.caml_array_get(filteredItems, i), selectedItem);
                         return React.createElement("li", {
                                     key: item[/* value */1],
-                                    className: SelectMenuStyles$ReasonReactExamples.listItem(focus, active)
+                                    className: SelectMenuStyles$ReasonReactExamples.listItem(focus, active),
+                                    onMouseEnter: (function (param) {
+                                        return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
+                                      })
                                   }, item[/* label */0]);
                       }))));
 }

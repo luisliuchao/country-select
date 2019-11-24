@@ -9,6 +9,7 @@ type state = {
 type action = 
 | ChangeInputValue(string)
 | FilterItems(string)
+| FocusItem(int)
 | FocusNextItem
 | FocusPrevItem
 | SelectItem(item);
@@ -39,6 +40,8 @@ let make = (
           inputValue == "" || Js.String.includes(Js.String.toLowerCase(inputValue), Js.String.toLowerCase(item.label))
         });
       { ...state, filteredItems, focusedItemIndex: 0 }
+    | FocusItem(index) =>
+      { ...state, focusedItemIndex: index }
     | FocusNextItem when focusedItemIndex < Js.Array.length(filteredItems) - 1 =>
       { ...state, focusedItemIndex: focusedItemIndex + 1 }
     | FocusPrevItem when focusedItemIndex > 0 =>
@@ -107,7 +110,11 @@ let make = (
         -> Belt.Array.mapWithIndex((i, item) => {
             let focus: bool = i == focusedItemIndex;
             let active: bool = Some(filteredItems[i]) == selectedItem;
-            <li key={item.value} className=Styles.listItem(~focus=focus, ~active=active)>
+            <li 
+              key={item.value} 
+              className=Styles.listItem(~focus=focus, ~active=active)
+              onMouseEnter=(_ => dispatch(FocusItem(i)))
+            >
               { React.string(item.label) }
             </li>
           })
