@@ -5,6 +5,7 @@ var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Decode$ReasonReactExamples = require("./Decode.bs.js");
+var Styles$ReasonReactExamples = require("./Styles.bs.js");
 var SelectMenu$ReasonReactExamples = require("./SelectMenu.bs.js");
 
 function CountrySelect(Props) {
@@ -74,7 +75,9 @@ function CountrySelect(Props) {
   var countries = state[/* countries */0];
   return React.createElement("div", {
               className: className
-            }, selectedCountry !== undefined ? selectedCountry[/* label */0] : "Nothing selected", typeof countries === "number" ? (
+            }, React.createElement("div", {
+                  className: Styles$ReasonReactExamples.container
+                }, selectedCountry !== undefined ? selectedCountry[/* label */0] : "Nothing selected"), typeof countries === "number" ? (
                 countries !== 0 ? React.createElement("div", undefined, "An error occurred!") : React.createElement("div", undefined, "Loading...")
               ) : React.createElement(SelectMenu$ReasonReactExamples.make, {
                     items: countries[0],

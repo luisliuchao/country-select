@@ -90,7 +90,7 @@ let make = (
               ~backgroundColor= i == focusedItemIndex ? "red" : Some(filteredItems[i]) == selectedItem ? "blue" : "white",
               (),
             )};
-            <li key={item.value} style=style>{ React.string(item.label) }</li>
+            <li key={item.value} style>{ React.string(item.label) }</li>
           })
         -> React.array
       }

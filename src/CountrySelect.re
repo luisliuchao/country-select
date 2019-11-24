@@ -63,12 +63,14 @@ let make = (
   let { selectedCountry, countries } = state;
 
   <div className>
-    { 
-      switch (selectedCountry) {
-      | Some(country) => React.string(country.label)
-      | None => React.string("Nothing selected")
+    <div className=Styles.container>
+      { 
+        switch (selectedCountry) {
+        | Some(country) => React.string(country.label)
+        | None => React.string("Nothing selected")
+        }
       }
-    }
+    </div>
     {
       switch (countries) {
        | ErrorFetchingCountries => 
