@@ -19,6 +19,7 @@ let make = (
     ~country: option(string),
     ~onChange: string => unit=(_) => ()
   ) => {
+
   let initialState = {
     countries: LoadingCountries,
     selectedCountry: None,
@@ -33,6 +34,15 @@ let make = (
         |> then_(response => response##json())
         |> then_(jsonResponse => {
           let items: array(country) = jsonResponse |> Decode.countries;
+          switch (country) {
+          | Some(value) => 
+            let selectedItems = items -> Belt.Array.keep(item => item.value == value);
+            switch (Js.Array.length(selectedItems)) {
+            | 0 => ()
+            | _ => setState(state => { ...state, selectedCountry: Some(selectedItems[0])})
+            }
+          | None => ()
+          }
           setState(state => { ...state, countries: LoadedCountries(items)  });
           Js.Promise.resolve();
         })
@@ -46,7 +56,7 @@ let make = (
   });
 
   let handleSelect: country => unit = country => {
-    setState(state => { ...state, selectedCountry: Some(country) })
+    setState(state => { ...state, selectedCountry: Some(country) });
     onChange(country.value);
   };
 
