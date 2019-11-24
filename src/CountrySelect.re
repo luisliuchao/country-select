@@ -80,8 +80,9 @@ let make = (
     )
   >
     <input
+      id="CountrySelect-input"
       readOnly=true
-      className=Styles.inputContainer
+      className=Styles.input
       value= { 
         switch (selectedCountry) {
         | Some(country) => country.label

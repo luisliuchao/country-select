@@ -105,7 +105,8 @@ function CountrySelect(Props) {
                   }
                 })
             }, React.createElement("input", {
-                  className: CountrySelectStyles$ReasonReactExamples.inputContainer,
+                  className: CountrySelectStyles$ReasonReactExamples.input,
+                  id: "CountrySelect-input",
                   readOnly: true,
                   value: selectedCountry !== undefined ? selectedCountry[/* label */0] : "",
                   onClick: (function (param) {

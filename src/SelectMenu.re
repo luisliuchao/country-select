@@ -1,3 +1,5 @@
+open Webapi.Dom;
+
 type item = Model.item;
 
 type state = {
@@ -30,6 +32,33 @@ let make = (
     focusedItemIndex: 0,
   };
 
+
+  let checkScroll: int => unit = (index) => {
+    let containerEle = Utils.getElementById("CountrySelect-list-container")
+    switch (containerEle) {
+    | None => ()
+    | Some(container) =>
+        let containerHeight: float = float_of_int(HtmlElement.clientHeight(container))
+        let containerScrollTop: float = HtmlElement.scrollTop(container)
+        let itemEle = Utils.getElementById("CountrySelect-list-item-" ++ string_of_int(index))
+        switch(itemEle) {
+        | None => ()
+        | Some(item) => 
+          let itemHeight: float = float_of_int(HtmlElement.clientHeight(item))
+          let itemOffsetTop :float = float_of_int(HtmlElement.offsetTop(item))
+          let bottomDiff: float = (containerScrollTop +. containerHeight) -. (itemHeight +. itemOffsetTop);
+          if (bottomDiff < 0.0) {
+            HtmlElement.setScrollTop(container, (-1.0 *. bottomDiff) +. containerScrollTop)
+          } else  {
+            let topDiff: float = itemOffsetTop -. containerScrollTop;
+            if (topDiff < 0.0) {
+              HtmlElement.setScrollTop(container, topDiff +. containerScrollTop)
+            }
+          }
+        }
+    }
+  };
+
   let reducer = (state, action) => {
     let { focusedItemIndex, filteredItems } = state;
     switch (action) {
@@ -43,9 +72,13 @@ let make = (
     | FocusItem(index) =>
       { ...state, focusedItemIndex: index }
     | FocusNextItem when focusedItemIndex < Js.Array.length(filteredItems) - 1 =>
-      { ...state, focusedItemIndex: focusedItemIndex + 1 }
+      let newIndex: int = focusedItemIndex + 1;
+      checkScroll(newIndex);
+      { ...state, focusedItemIndex: newIndex }
     | FocusPrevItem when focusedItemIndex > 0 =>
-      { ...state, focusedItemIndex: focusedItemIndex - 1 }
+      let newIndex: int = focusedItemIndex - 1;
+      checkScroll(newIndex);
+      { ...state, focusedItemIndex: newIndex }
     | SelectItem(item) =>
       onSelect(item);
       state;
@@ -57,8 +90,19 @@ let make = (
 
   let { inputValue, filteredItems, focusedItemIndex } = state;
 
+  // auto focus the input 
+  React.useEffect0(() => {
+    let inputEle = Utils.getElementById("CountrySelect-filter")
+    switch (inputEle) {
+    | None => ()
+    | Some(element) => HtmlElement.focus(element)
+    }
+    None;
+  });
+
   <div className=Styles.container>
     <input
+      id="CountrySelect-filter"
       placeholder="Search"
       value=inputValue
       className=Styles.input
@@ -90,7 +134,8 @@ let make = (
       )
     />
     <ul 
-      className=Styles.list
+      id="CountrySelect-list-container"
+      className=Styles.listContainer
       onClick=(
         event => {
           let label: string = ReactEvent.Mouse.target(event)##innerText;
@@ -111,9 +156,9 @@ let make = (
             let focus: bool = i == focusedItemIndex;
             let active: bool = Some(filteredItems[i]) == selectedItem;
             <li 
+              id={"CountrySelect-list-item-" ++ string_of_int(i)}
               key={item.value} 
               className=Styles.listItem(~focus=focus, ~active=active)
-              onMouseEnter=(_ => dispatch(FocusItem(i)))
             >
               { React.string(item.label) }
             </li>

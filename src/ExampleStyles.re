@@ -40,5 +40,6 @@ let style = {j|
     background-color: white;
     padding: 16px;
     border-radius: 0px 0px 12px 12px;
+    height: 200px;
   }
 |j};

@@ -6,6 +6,8 @@ var React = require("react");
 var Caml_obj = require("bs-platform/lib/js/caml_obj.js");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
+var Caml_option = require("bs-platform/lib/js/caml_option.js");
+var Utils$ReasonReactExamples = require("./Utils.bs.js");
 var SelectMenuStyles$ReasonReactExamples = require("./SelectMenuStyles.bs.js");
 
 function SelectMenu(Props) {
@@ -20,24 +22,59 @@ function SelectMenu(Props) {
     /* filteredItems */items,
     /* focusedItemIndex */0
   ];
+  var checkScroll = function (index) {
+    var containerEle = Utils$ReasonReactExamples.getElementById("CountrySelect-list-container");
+    if (containerEle !== undefined) {
+      var container = Caml_option.valFromOption(containerEle);
+      var containerHeight = container.clientHeight;
+      var containerScrollTop = container.scrollTop;
+      var itemEle = Utils$ReasonReactExamples.getElementById("CountrySelect-list-item-" + String(index));
+      if (itemEle !== undefined) {
+        var item = Caml_option.valFromOption(itemEle);
+        var itemHeight = item.clientHeight;
+        var itemOffsetTop = item.offsetTop;
+        var bottomDiff = containerScrollTop + containerHeight - (itemHeight + itemOffsetTop);
+        if (bottomDiff < 0.0) {
+          container.scrollTop = -1.0 * bottomDiff + containerScrollTop;
+          return /* () */0;
+        } else {
+          var topDiff = itemOffsetTop - containerScrollTop;
+          if (topDiff < 0.0) {
+            container.scrollTop = topDiff + containerScrollTop;
+            return /* () */0;
+          } else {
+            return 0;
+          }
+        }
+      } else {
+        return /* () */0;
+      }
+    } else {
+      return /* () */0;
+    }
+  };
   var reducer = function (state, action) {
     var focusedItemIndex = state[/* focusedItemIndex */2];
     if (typeof action === "number") {
       if (action === /* FocusNextItem */0) {
         if (focusedItemIndex < (state[/* filteredItems */1].length - 1 | 0)) {
+          var newIndex = focusedItemIndex + 1 | 0;
+          checkScroll(newIndex);
           return /* record */[
                   /* inputValue */state[/* inputValue */0],
                   /* filteredItems */state[/* filteredItems */1],
-                  /* focusedItemIndex */focusedItemIndex + 1 | 0
+                  /* focusedItemIndex */newIndex
                 ];
         } else {
           return state;
         }
       } else if (focusedItemIndex > 0) {
+        var newIndex$1 = focusedItemIndex - 1 | 0;
+        checkScroll(newIndex$1);
         return /* record */[
                 /* inputValue */state[/* inputValue */0],
                 /* filteredItems */state[/* filteredItems */1],
-                /* focusedItemIndex */focusedItemIndex - 1 | 0
+                /* focusedItemIndex */newIndex$1
               ];
       } else {
         return state;
@@ -82,10 +119,18 @@ function SelectMenu(Props) {
   var focusedItemIndex = state[/* focusedItemIndex */2];
   var filteredItems = state[/* filteredItems */1];
   var dispatch = match$1[1];
+  React.useEffect((function () {
+          var inputEle = Utils$ReasonReactExamples.getElementById("CountrySelect-filter");
+          if (inputEle !== undefined) {
+            Caml_option.valFromOption(inputEle).focus();
+          }
+          return ;
+        }), ([]));
   return React.createElement("div", {
               className: SelectMenuStyles$ReasonReactExamples.container
             }, React.createElement("input", {
                   className: SelectMenuStyles$ReasonReactExamples.input,
+                  id: "CountrySelect-filter",
                   placeholder: "Search",
                   value: state[/* inputValue */0],
                   onKeyDown: (function ($$event) {
@@ -120,7 +165,8 @@ function SelectMenu(Props) {
                       return Curry._1(dispatch, /* FilterItems */Block.__(1, [value]));
                     })
                 }), React.createElement("ul", {
-                  className: SelectMenuStyles$ReasonReactExamples.list,
+                  className: SelectMenuStyles$ReasonReactExamples.listContainer,
+                  id: "CountrySelect-list-container",
                   onClick: (function ($$event) {
                       var label = $$event.target.innerText;
                       var items = Belt_Array.keep(filteredItems, (function (item) {
@@ -139,9 +185,7 @@ function SelectMenu(Props) {
                         return React.createElement("li", {
                                     key: item[/* value */1],
                                     className: SelectMenuStyles$ReasonReactExamples.listItem(focus, active),
-                                    onMouseEnter: (function (param) {
-                                        return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
-                                      })
+                                    id: "CountrySelect-list-item-" + String(i)
                                   }, item[/* label */0]);
                       }))));
 }

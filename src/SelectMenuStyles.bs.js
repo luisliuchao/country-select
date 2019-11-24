@@ -48,7 +48,7 @@ var input = Css.style(/* :: */[
       ]
     ]);
 
-var list = Css.style(/* :: */[
+var listContainer = Css.style(/* :: */[
       Css.padding(Css.px(0)),
       /* :: */[
         Css.margin(Css.px(0)),
@@ -58,7 +58,10 @@ var list = Css.style(/* :: */[
             Css.maxHeight(Css.px(200)),
             /* :: */[
               Css.overflowY(Css.auto),
-              /* [] */0
+              /* :: */[
+                Css.position(Css.relative),
+                /* [] */0
+              ]
             ]
           ]
         ]
@@ -76,7 +79,13 @@ function listItem(focus, active) {
                         )),
                   /* :: */[
                     Css.color(active ? Css.white : Css.black),
-                    /* [] */0
+                    /* :: */[
+                      Css.hover(/* :: */[
+                            Css.backgroundColor(focusColor),
+                            /* [] */0
+                          ]),
+                      /* [] */0
+                    ]
                   ]
                 ]
               ]
@@ -89,6 +98,6 @@ exports.focusColor = focusColor;
 exports.borderColor = borderColor;
 exports.container = container;
 exports.input = input;
-exports.list = list;
+exports.listContainer = listContainer;
 exports.listItem = listItem;
 /* font Not a pure module */

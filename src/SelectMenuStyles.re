@@ -23,12 +23,13 @@ let input = style([
   borderBottom(px(1), solid, borderColor),
 ]);
 
-let list = style([
+let listContainer = style([
   padding(px(0)),
   margin(px(0)),
   listStyleType(none),
   maxHeight(px(200)),
   overflowY(auto),
+  position(relative),
 ]);
 
 let listItem = (~focus: bool, ~active: bool) =>  
@@ -37,4 +38,7 @@ let listItem = (~focus: bool, ~active: bool) =>
     fontSize(px(15)),
     backgroundColor(active ? activeColor : focus ? focusColor : white),
     color(active ? white : black),
+    hover([
+      backgroundColor(focusColor)
+    ])
   ]);
