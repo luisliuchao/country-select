@@ -9,6 +9,16 @@ var Decode$ReasonReactExamples = require("./Decode.bs.js");
 var SelectMenu$ReasonReactExamples = require("./SelectMenu.bs.js");
 var CountrySelectStyles$ReasonReactExamples = require("./CountrySelectStyles.bs.js");
 
+var link = document.createElement("link");
+
+link.setAttribute("rel", "stylesheet");
+
+link.setAttribute("type", "text/css");
+
+link.setAttribute("href", "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css");
+
+document.head.appendChild(link);
+
 function CountrySelect(Props) {
   var className = Props.className;
   var country = Props.country;
@@ -144,6 +154,7 @@ var Styles = 0;
 
 var make = CountrySelect;
 
+exports.link = link;
 exports.Styles = Styles;
 exports.make = make;
-/* react Not a pure module */
+/* link Not a pure module */

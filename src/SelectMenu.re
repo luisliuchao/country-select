@@ -1,5 +1,4 @@
 open Webapi.Dom;
-[@bs.val] external setTimeout : (unit => unit, int) => float = "setTimeout";
 
 type item = Model.item;
 
@@ -171,7 +170,11 @@ let make = (
                 dispatch(FocusItem(i))
               })
             >
-              { React.string(item.label) }
+              <span className={"flag-icon flag-icon-" ++ item.value ++ " " ++ Styles.itemMap}></span>
+              <span className=Styles.itemLabel>
+                { React.string(item.label) }
+              </span>
+
             </li>
           })
         -> React.array

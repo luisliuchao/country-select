@@ -199,7 +199,11 @@ function SelectMenu(Props) {
                                     onMouseEnter: (function (param) {
                                         return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
                                       })
-                                  }, item[/* label */0]);
+                                  }, React.createElement("span", {
+                                        className: "flag-icon flag-icon-" + (item[/* value */1] + (" " + SelectMenuStyles$ReasonReactExamples.itemMap))
+                                      }), React.createElement("span", {
+                                        className: SelectMenuStyles$ReasonReactExamples.itemLabel
+                                      }, item[/* label */0]));
                       }))));
 }
 

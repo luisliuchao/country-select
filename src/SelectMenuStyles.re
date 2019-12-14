@@ -40,6 +40,18 @@ let listItem = (~focus: bool, ~active: bool) =>
     color(active ? white : black),
     cursor(`pointer),
     hover([
-      backgroundColor(focusColor)
-    ])
+      backgroundColor(active ? activeColor : focusColor)
+    ]),
+    display(`flex),
+    alignItems(`flexStart)
   ]);
+
+let itemMap = style([
+  marginRight(px(10)),
+  width(px(20)),
+  height(px(15)),
+]);
+
+let itemLabel=style([
+  flex(`num(1.0)),
+])

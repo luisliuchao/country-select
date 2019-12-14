@@ -27,7 +27,7 @@ function makeContainer(text) {
 
 ReactDom.render(React.createElement(CountrySelect$ReasonReactExamples.make, {
           className: "custom-class",
-          country: "ax",
+          country: "sg",
           onChange: (function (country) {
               console.log(country);
               return /* () */0;

@@ -83,10 +83,16 @@ function listItem(focus, active) {
                       Css.cursor(/* pointer */-786317123),
                       /* :: */[
                         Css.hover(/* :: */[
-                              Css.backgroundColor(focusColor),
+                              Css.backgroundColor(active ? activeColor : focusColor),
                               /* [] */0
                             ]),
-                        /* [] */0
+                        /* :: */[
+                          Css.display(/* flex */-1010954439),
+                          /* :: */[
+                            Css.alignItems(/* flexStart */662439529),
+                            /* [] */0
+                          ]
+                        ]
                       ]
                     ]
                   ]
@@ -94,6 +100,25 @@ function listItem(focus, active) {
               ]
             ]);
 }
+
+var itemMap = Css.style(/* :: */[
+      Css.marginRight(Css.px(10)),
+      /* :: */[
+        Css.width(Css.px(20)),
+        /* :: */[
+          Css.height(Css.px(15)),
+          /* [] */0
+        ]
+      ]
+    ]);
+
+var itemLabel = Css.style(/* :: */[
+      Css.flex(/* `num */[
+            5496390,
+            1.0
+          ]),
+      /* [] */0
+    ]);
 
 exports.font = font;
 exports.activeColor = activeColor;
@@ -103,4 +128,6 @@ exports.container = container;
 exports.input = input;
 exports.listContainer = listContainer;
 exports.listItem = listItem;
+exports.itemMap = itemMap;
+exports.itemLabel = itemLabel;
 /* font Not a pure module */

@@ -1,3 +1,9 @@
+[@bs.val] external document: Js.t({..}) = "document";
+let link = document##createElement("link");
+link##setAttribute("rel", "stylesheet");
+link##setAttribute("type", "text/css");
+link##setAttribute("href", "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css");
+document##head##appendChild(link);
 
 [@bs.val] external fetch: string => Js.Promise.t('a) = "fetch";
 
