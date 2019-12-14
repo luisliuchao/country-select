@@ -13,5 +13,4 @@
 
 
 ## To Do
-1. include flag-icon-css
-2. include react-virtualized
+1. include react-virtualized or react-virtual-list
