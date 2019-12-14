@@ -96,13 +96,24 @@ let make = (
 
   let { inputValue, filteredItems, focusedItemIndex } = state;
 
-  // auto focus the input 
   React.useEffect0(() => {
+    // focus the input 
     let inputEle = Utils.getElementById("CountrySelect-filter")
     switch (inputEle) {
     | None => ()
     | Some(element) => HtmlElement.focus(element)
     }
+
+    // scroll to the current country
+    switch (selectedItem) {
+    | None => ();
+    | Some(item) => {
+        let index = filteredItems |> Js.Array.indexOf(item);
+        Js.log(index);
+        checkMenuScroll(index);
+      }
+    }
+
     None;
   });
 

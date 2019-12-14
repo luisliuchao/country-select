@@ -131,6 +131,11 @@ function SelectMenu(Props) {
           if (inputEle !== undefined) {
             Caml_option.valFromOption(inputEle).focus();
           }
+          if (selectedItem !== undefined) {
+            var index = filteredItems.indexOf(selectedItem);
+            console.log(index);
+            checkMenuScroll(index);
+          }
           return ;
         }), ([]));
   return React.createElement("div", {
