@@ -40,10 +40,10 @@ let make = (
           let items: array(country) = jsonResponse |> Decode.countries;
           switch (country) {
           | Some(value) => 
-            let selectedItems = items -> Belt.Array.keep(item => item.value == Js.String.toLowerCase(value));
-            switch (Js.Array.length(selectedItems)) {
-            | 0 => ()
-            | _ => setState(state => { ...state, selectedCountry: Some(selectedItems[0])})
+            let selectedItem = items -> Belt.Array.getBy(item => item.value == Js.String.toLowerCase(value));
+            switch (selectedItem) {
+            | None => ()
+            | Some(_) => setState(state => { ...state, selectedCountry: selectedItem})
             }
           | None => ()
           }

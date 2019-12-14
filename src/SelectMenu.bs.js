@@ -22,7 +22,16 @@ function SelectMenu(Props) {
     /* filteredItems */items,
     /* focusedItemIndex */0
   ];
-  var checkScroll = function (index) {
+  var scrollMenu = function (distance) {
+    var containerEle = Utils$ReasonReactExamples.getElementById("CountrySelect-list-container");
+    if (containerEle !== undefined) {
+      Caml_option.valFromOption(containerEle).scrollTop = distance;
+      return /* () */0;
+    } else {
+      return /* () */0;
+    }
+  };
+  var checkMenuScroll = function (index) {
     var containerEle = Utils$ReasonReactExamples.getElementById("CountrySelect-list-container");
     if (containerEle !== undefined) {
       var container = Caml_option.valFromOption(containerEle);
@@ -35,13 +44,11 @@ function SelectMenu(Props) {
         var itemOffsetTop = item.offsetTop;
         var bottomDiff = containerScrollTop + containerHeight - (itemHeight + itemOffsetTop);
         if (bottomDiff < 0.0) {
-          container.scrollTop = -1.0 * bottomDiff + containerScrollTop;
-          return /* () */0;
+          return scrollMenu(-1.0 * bottomDiff + containerScrollTop);
         } else {
           var topDiff = itemOffsetTop - containerScrollTop;
           if (topDiff < 0.0) {
-            container.scrollTop = topDiff + containerScrollTop;
-            return /* () */0;
+            return scrollMenu(topDiff + containerScrollTop);
           } else {
             return 0;
           }
@@ -59,7 +66,7 @@ function SelectMenu(Props) {
       if (action === /* FocusNextItem */0) {
         if (focusedItemIndex < (state[/* filteredItems */1].length - 1 | 0)) {
           var newIndex = focusedItemIndex + 1 | 0;
-          checkScroll(newIndex);
+          checkMenuScroll(newIndex);
           return /* record */[
                   /* inputValue */state[/* inputValue */0],
                   /* filteredItems */state[/* filteredItems */1],
@@ -70,7 +77,7 @@ function SelectMenu(Props) {
         }
       } else if (focusedItemIndex > 0) {
         var newIndex$1 = focusedItemIndex - 1 | 0;
-        checkScroll(newIndex$1);
+        checkMenuScroll(newIndex$1);
         return /* record */[
                 /* inputValue */state[/* inputValue */0],
                 /* filteredItems */state[/* filteredItems */1],
@@ -155,8 +162,12 @@ function SelectMenu(Props) {
                         return /* () */0;
                       } else {
                         $$event.preventDefault();
-                        var item = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
-                        return Curry._1(dispatch, /* SelectItem */Block.__(3, [item]));
+                        if (filteredItems.length > focusedItemIndex) {
+                          var item = Caml_array.caml_array_get(filteredItems, focusedItemIndex);
+                          return Curry._1(dispatch, /* SelectItem */Block.__(3, [item]));
+                        } else {
+                          return 0;
+                        }
                       }
                     }),
                   onChange: (function ($$event) {
@@ -169,12 +180,11 @@ function SelectMenu(Props) {
                   id: "CountrySelect-list-container",
                   onClick: (function ($$event) {
                       var label = $$event.target.innerText;
-                      var items = Belt_Array.keep(filteredItems, (function (item) {
+                      var item = Belt_Array.getBy(filteredItems, (function (item) {
                               return item[/* label */0] === label;
                             }));
-                      var match = items.length;
-                      if (match !== 0) {
-                        return Curry._1(dispatch, /* SelectItem */Block.__(3, [Caml_array.caml_array_get(items, 0)]));
+                      if (item !== undefined) {
+                        return Curry._1(dispatch, /* SelectItem */Block.__(3, [item]));
                       } else {
                         return /* () */0;
                       }

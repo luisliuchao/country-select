@@ -3,7 +3,6 @@
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
-var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_option = require("bs-platform/lib/js/caml_option.js");
 var Utils$ReasonReactExamples = require("./Utils.bs.js");
 var Decode$ReasonReactExamples = require("./Decode.bs.js");
@@ -33,15 +32,14 @@ function CountrySelect(Props) {
                     var items = Decode$ReasonReactExamples.countries(jsonResponse);
                     if (country !== undefined) {
                       var value = country;
-                      var selectedItems = Belt_Array.keep(items, (function (item) {
+                      var selectedItem = Belt_Array.getBy(items, (function (item) {
                               return item[/* value */1] === value.toLowerCase();
                             }));
-                      var match = selectedItems.length;
-                      if (match !== 0) {
+                      if (selectedItem !== undefined) {
                         Curry._1(setState, (function (state) {
                                 return /* record */[
                                         /* countries */state[/* countries */0],
-                                        /* selectedCountry */Caml_array.caml_array_get(selectedItems, 0),
+                                        /* selectedCountry */selectedItem,
                                         /* isMenuOpen */state[/* isMenuOpen */2]
                                       ];
                               }));

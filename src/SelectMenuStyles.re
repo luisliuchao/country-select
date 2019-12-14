@@ -38,6 +38,7 @@ let listItem = (~focus: bool, ~active: bool) =>
     fontSize(px(15)),
     backgroundColor(active ? activeColor : focus ? focusColor : white),
     color(active ? white : black),
+    cursor(`pointer),
     hover([
       backgroundColor(focusColor)
     ])

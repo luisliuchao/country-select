@@ -80,11 +80,14 @@ function listItem(focus, active) {
                   /* :: */[
                     Css.color(active ? Css.white : Css.black),
                     /* :: */[
-                      Css.hover(/* :: */[
-                            Css.backgroundColor(focusColor),
-                            /* [] */0
-                          ]),
-                      /* [] */0
+                      Css.cursor(/* pointer */-786317123),
+                      /* :: */[
+                        Css.hover(/* :: */[
+                              Css.backgroundColor(focusColor),
+                              /* [] */0
+                            ]),
+                        /* [] */0
+                      ]
                     ]
                   ]
                 ]

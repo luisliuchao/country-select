@@ -1,4 +1,5 @@
 open Webapi.Dom;
+[@bs.val] external setTimeout : (unit => unit, int) => float = "setTimeout";
 
 type item = Model.item;
 
@@ -16,7 +17,6 @@ type action =
 | FocusPrevItem
 | SelectItem(item);
 
-
 module Styles = SelectMenuStyles;
 
 [@react.component]
@@ -32,9 +32,16 @@ let make = (
     focusedItemIndex: 0,
   };
 
+  let scrollMenu = (~distance) => {
+    let containerEle = Utils.getElementById("CountrySelect-list-container");
+    switch (containerEle) {
+    | None => ()
+    | Some(container) => HtmlElement.setScrollTop(container, distance)
+    }
+  };
 
-  let checkScroll: int => unit = (index) => {
-    let containerEle = Utils.getElementById("CountrySelect-list-container")
+  let checkMenuScroll= (~index) => {
+    let containerEle = Utils.getElementById("CountrySelect-list-container");
     switch (containerEle) {
     | None => ()
     | Some(container) =>
@@ -48,11 +55,11 @@ let make = (
           let itemOffsetTop :float = float_of_int(HtmlElement.offsetTop(item))
           let bottomDiff: float = (containerScrollTop +. containerHeight) -. (itemHeight +. itemOffsetTop);
           if (bottomDiff < 0.0) {
-            HtmlElement.setScrollTop(container, (-1.0 *. bottomDiff) +. containerScrollTop)
+            scrollMenu(~distance=(-1.0 *. bottomDiff) +. containerScrollTop);
           } else  {
             let topDiff: float = itemOffsetTop -. containerScrollTop;
             if (topDiff < 0.0) {
-              HtmlElement.setScrollTop(container, topDiff +. containerScrollTop)
+              scrollMenu(~distance=topDiff +. containerScrollTop);
             }
           }
         }
@@ -71,13 +78,13 @@ let make = (
       { ...state, filteredItems, focusedItemIndex: 0 }
     | FocusItem(index) =>
       { ...state, focusedItemIndex: index }
-    | FocusNextItem when focusedItemIndex < Js.Array.length(filteredItems) - 1 =>
+    | FocusNextItem when focusedItemIndex < Belt.Array.length(filteredItems) - 1 =>
       let newIndex: int = focusedItemIndex + 1;
-      checkScroll(newIndex);
+      checkMenuScroll(~index=newIndex);
       { ...state, focusedItemIndex: newIndex }
     | FocusPrevItem when focusedItemIndex > 0 =>
       let newIndex: int = focusedItemIndex - 1;
-      checkScroll(newIndex);
+      checkMenuScroll(~index=newIndex);
       { ...state, focusedItemIndex: newIndex }
     | SelectItem(item) =>
       onSelect(item);
@@ -126,8 +133,10 @@ let make = (
             dispatch(FocusPrevItem)
           | 13 =>
             preventDefault(event)
-            let item: item = filteredItems[focusedItemIndex]
-            dispatch(SelectItem(item))
+            if (Belt.Array.length(filteredItems) > focusedItemIndex) {
+              let item: item = filteredItems[focusedItemIndex]
+              dispatch(SelectItem(item))
+            }
           | _ => ()
           }
         }
@@ -139,13 +148,12 @@ let make = (
       onClick=(
         event => {
           let label: string = ReactEvent.Mouse.target(event)##innerText;
-          let items = filteredItems -> Belt.Array.keep(item => {
+          let item = filteredItems -> Belt.Array.getBy(item => {
             item.label == label
           });
-          switch (Js.Array.length(items)) {
-          | 0 => ()
-          | _ => 
-            dispatch(SelectItem(items[0]));
+          switch (item) {
+          | None => ()
+          | Some(item) => dispatch(SelectItem(item))
           }
         }
       )
@@ -159,7 +167,9 @@ let make = (
               id={"CountrySelect-list-item-" ++ string_of_int(i)}
               key={item.value} 
               className=Styles.listItem(~focus=focus, ~active=active)
-              onMouseEnter=(_ => dispatch(FocusItem(i)))
+              onMouseEnter=(_ => {
+                dispatch(FocusItem(i))
+              })
             >
               { React.string(item.label) }
             </li>

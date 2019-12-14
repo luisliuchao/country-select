@@ -12,7 +12,7 @@ var input = Css.style(/* :: */[
           /* :: */[
             Css.outlineStyle(Css.none),
             /* :: */[
-              Css.cursor(Css.auto),
+              Css.cursor(/* pointer */-786317123),
               /* :: */[
                 Css.focus(/* :: */[
                       Css.outlineColor(Css_AtomicTypes.Color.hex("3F84F7")),
