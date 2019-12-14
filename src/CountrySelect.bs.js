@@ -135,7 +135,7 @@ function CountrySelect(Props) {
                                     return /* record */[
                                             /* countries */state[/* countries */0],
                                             /* selectedCountry */state[/* selectedCountry */1],
-                                            /* isMenuOpen */true
+                                            /* isMenuOpen */!state[/* isMenuOpen */2]
                                           ];
                                   }));
                     })

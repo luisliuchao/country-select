@@ -116,7 +116,16 @@ let make = (
     | None => ();
     | Some(item) => {
         let index = filteredItems |> Js.Array.indexOf(item);
-        checkMenuScroll(~index=index);
+        if (index > -1) {
+          dispatch(FocusItem(index));
+          let scrollToIndex = index + 4;
+          let itemsLength = Belt.Array.length(filteredItems);
+          if (scrollToIndex > itemsLength - 1) {
+            checkMenuScroll(~index=itemsLength - 1);
+          } else {
+            checkMenuScroll(~index=scrollToIndex);
+          }
+        }
       }
     }
 

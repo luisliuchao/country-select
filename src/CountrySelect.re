@@ -106,7 +106,7 @@ let make = (
         | None => ""
         }
       }
-      onClick=(_ => setState(state => { ...state, isMenuOpen: true }))
+      onClick=(_ => setState(state => { ...state, isMenuOpen: !state.isMenuOpen }))
     />
     {
       switch (isMenuOpen) {

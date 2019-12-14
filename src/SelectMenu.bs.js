@@ -145,7 +145,18 @@ function SelectMenu(Props) {
             Caml_option.valFromOption(inputEle).focus();
           }
           if (selectedItem !== undefined) {
-            checkMenuScroll(filteredItems.indexOf(selectedItem));
+            var index = filteredItems.indexOf(selectedItem);
+            if (index > -1) {
+              Curry._1(dispatch, /* FocusItem */Block.__(2, [index]));
+              var scrollToIndex = index + 4 | 0;
+              var itemsLength = filteredItems.length;
+              if (scrollToIndex > (itemsLength - 1 | 0)) {
+                checkMenuScroll(itemsLength - 1 | 0);
+              } else {
+                checkMenuScroll(scrollToIndex);
+              }
+            }
+            
           }
           return ;
         }), ([]));
