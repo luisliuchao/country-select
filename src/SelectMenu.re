@@ -25,6 +25,8 @@ let make = (
     ~onSelect: item => unit=(_) => (),
   ) => {
 
+  let ( isScrollingMenu, setIsScrolling ) = React.useState(() => false);
+
   let initialState = {
     inputValue: "" ,
     filteredItems: items,
@@ -35,7 +37,12 @@ let make = (
     let containerEle = Utils.getElementById("CountrySelect-list-container");
     switch (containerEle) {
     | None => ()
-    | Some(container) => HtmlElement.setScrollTop(container, distance)
+    | Some(container) => {
+        HtmlElement.setScrollTop(container, distance)
+        // fix the issue of cursor hovering on other item when navigating using keyboard
+        setIsScrolling(_ => true);
+        let _id = Js.Global.setTimeout(() => setIsScrolling(_ => false), 100);
+      }
     }
   };
 
@@ -109,8 +116,7 @@ let make = (
     | None => ();
     | Some(item) => {
         let index = filteredItems |> Js.Array.indexOf(item);
-        Js.log(index);
-        checkMenuScroll(index);
+        checkMenuScroll(~index=index);
       }
     }
 
@@ -178,7 +184,9 @@ let make = (
               key={item.value} 
               className=Styles.listItem(~focus=focus, ~active=active)
               onMouseEnter=(_ => {
-                dispatch(FocusItem(i))
+                if (!isScrollingMenu) {
+                  dispatch(FocusItem(i))
+                }
               })
             >
               <span className={"flag-icon flag-icon-" ++ item.value ++ " " ++ Styles.itemMap}></span>

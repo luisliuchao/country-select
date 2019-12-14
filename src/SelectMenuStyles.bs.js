@@ -82,16 +82,10 @@ function listItem(focus, active) {
                     /* :: */[
                       Css.cursor(/* pointer */-786317123),
                       /* :: */[
-                        Css.hover(/* :: */[
-                              Css.backgroundColor(active ? activeColor : focusColor),
-                              /* [] */0
-                            ]),
+                        Css.display(/* flex */-1010954439),
                         /* :: */[
-                          Css.display(/* flex */-1010954439),
-                          /* :: */[
-                            Css.alignItems(/* flexStart */662439529),
-                            /* [] */0
-                          ]
+                          Css.alignItems(/* flexStart */662439529),
+                          /* [] */0
                         ]
                       ]
                     ]

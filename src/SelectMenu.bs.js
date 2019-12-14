@@ -17,6 +17,11 @@ function SelectMenu(Props) {
   var onSelect = match !== undefined ? match : (function (param) {
         return /* () */0;
       });
+  var match$1 = React.useState((function () {
+          return false;
+        }));
+  var setIsScrolling = match$1[1];
+  var isScrollingMenu = match$1[0];
   var initialState = /* record */[
     /* inputValue */"",
     /* filteredItems */items,
@@ -26,6 +31,14 @@ function SelectMenu(Props) {
     var containerEle = Utils$ReasonReactExamples.getElementById("CountrySelect-list-container");
     if (containerEle !== undefined) {
       Caml_option.valFromOption(containerEle).scrollTop = distance;
+      Curry._1(setIsScrolling, (function (param) {
+              return true;
+            }));
+      setTimeout((function (param) {
+              return Curry._1(setIsScrolling, (function (param) {
+                            return false;
+                          }));
+            }), 100);
       return /* () */0;
     } else {
       return /* () */0;
@@ -121,20 +134,18 @@ function SelectMenu(Props) {
       }
     }
   };
-  var match$1 = React.useReducer(reducer, initialState);
-  var state = match$1[0];
+  var match$2 = React.useReducer(reducer, initialState);
+  var state = match$2[0];
   var focusedItemIndex = state[/* focusedItemIndex */2];
   var filteredItems = state[/* filteredItems */1];
-  var dispatch = match$1[1];
+  var dispatch = match$2[1];
   React.useEffect((function () {
           var inputEle = Utils$ReasonReactExamples.getElementById("CountrySelect-filter");
           if (inputEle !== undefined) {
             Caml_option.valFromOption(inputEle).focus();
           }
           if (selectedItem !== undefined) {
-            var index = filteredItems.indexOf(selectedItem);
-            console.log(index);
-            checkMenuScroll(index);
+            checkMenuScroll(filteredItems.indexOf(selectedItem));
           }
           return ;
         }), ([]));
@@ -202,7 +213,11 @@ function SelectMenu(Props) {
                                     className: SelectMenuStyles$ReasonReactExamples.listItem(focus, active),
                                     id: "CountrySelect-list-item-" + String(i),
                                     onMouseEnter: (function (param) {
-                                        return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
+                                        if (isScrollingMenu) {
+                                          return 0;
+                                        } else {
+                                          return Curry._1(dispatch, /* FocusItem */Block.__(2, [i]));
+                                        }
                                       })
                                   }, React.createElement("span", {
                                         className: "flag-icon flag-icon-" + (item[/* value */1] + (" " + SelectMenuStyles$ReasonReactExamples.itemMap))

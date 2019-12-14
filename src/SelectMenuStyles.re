@@ -39,9 +39,6 @@ let listItem = (~focus: bool, ~active: bool) =>
     backgroundColor(active ? activeColor : focus ? focusColor : white),
     color(active ? white : black),
     cursor(`pointer),
-    hover([
-      backgroundColor(active ? activeColor : focusColor)
-    ]),
     display(`flex),
     alignItems(`flexStart)
   ]);
